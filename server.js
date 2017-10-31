@@ -39,7 +39,7 @@ class DOCUMENT {
 
 //VARS
 var docs = [];
-var peer = [IP]; //Have to add yourself here BUG in ccserver
+var peer = [CC]; //Have to add yourself here BUG in ccserver
 
 //FUNCTIONS
 
@@ -110,7 +110,7 @@ app.post('/v2.0/pushdocument', (req, res) => {
 	var required = ["docid", "titel", "auteur", "datum", "tekst"];
 	
 	//Check if we have all the required variables
-	for(var i=0; i<req.length; i++){
+	for(var i=0; i<required.length; i++){
 		//Variable not found? Stop the request
 		if(!(required[i] in req.body)){
 			console.warn("PushDocument requierd variable missing: " + required[i]);
@@ -133,8 +133,9 @@ app.post('/v2.0/reset', (req, res) => {
 	for(var i=0; i<peer.length; i++){
 		console.log("Telling peer " + peer[i] + " to reset");
 		//Send peer a post request
-		needle.post("http://"+peer[i]+"/reset", {});
+		needle.post("http://"+peer[i]+"/v2.0/reset", {});
 	}
+	peer = [CC];
 	//Starting 5s cooldown before we announce ourself again to the ccserver
 	console.log("Starting cooldown before re-announcing");
 	setTimeout(announce, 5000);
